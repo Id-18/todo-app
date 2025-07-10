@@ -1,0 +1,133 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">To-Do Task List</h2>
+
+  <div class="d-flex justify-content-between mb-3">
+    <a routerLink="/add" class="btn btn-success">➕ New Task</a>
+    <button (click)="loadTasks()" class="btn btn-outline-primary">🔄 Refresh</button>
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead style="background-color: #f5f5f5;">
+      <tr>
+        <th>Assigned To</th>
+        <th>Status</th>
+        <th>Due Date</th>
+        <th>Priority</th>
+        <th>Comments</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let task of tasks">
+        <td>{{ task.assignedTo }}</td>
+        <td>{{ task.status }}</td>
+        <td>{{ task.dueDate }}</td>
+        <td>{{ task.priority }}</td>
+        <td>{{ task.comments }}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-warning me-1" (click)="openEditModal(task)">✏️ Edit</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="openDeleteModal(task)">🗑️ Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- 🟡 Edit Task Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form #editForm="ngForm" (ngSubmit)="updateTask()" novalidate>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label>Assigned To <span class="text-danger">*</span></label>
+            <input [(ngModel)]="selectedTask.assignedTo" name="assignedTo" class="form-control" required #assignedTo="ngModel" />
+            <div class="text-danger small" *ngIf="assignedTo.invalid && assignedTo.touched">
+              Assigned To is required.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Status <span class="text-danger">*</span></label>
+            <select [(ngModel)]="selectedTask.status" name="status" class="form-select" required #status="ngModel">
+              <option value="">Select status</option>
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <div class="text-danger small" *ngIf="status.invalid && status.touched">
+              Status is required.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Due Date <span class="text-danger">*</span></label>
+            <input type="date" [(ngModel)]="selectedTask.dueDate" name="dueDate" class="form-control" required #dueDate="ngModel" />
+            <div class="text-danger small" *ngIf="dueDate.invalid && dueDate.touched">
+              Due Date is required.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Priority <span class="text-danger">*</span></label>
+            <select [(ngModel)]="selectedTask.priority" name="priority" class="form-select" required #priority="ngModel">
+              <option value="">Select priority</option>
+              <option value="Low">Low</option>
+              <option value="Normal">Normal</option>
+              <option value="High">High</option>
+            </select>
+            <div class="text-danger small" *ngIf="priority.invalid && priority.touched">
+              Priority is required.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label>Comments</label>
+            <textarea [(ngModel)]="selectedTask.comments" name="comments" class="form-control"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn" style="background:#fff3cd" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn" style="background:#cce5df" [disabled]="!editForm.valid">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- 🔴 Delete Task Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Delete</h5>
+      </div>
+      <div class="modal-body">
+        Do you want to delete task <strong>{{ selectedTask.assignedTo }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <button class="btn" style="background:#d4edda;" data-bs-dismiss="modal">No</button>
+        <button class="btn" style="background:#fff3cd;" (click)="confirmDelete()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Toast Container -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div class="toast align-items-center text-white bg-success" id="successToast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMsg">✔️ Success!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>

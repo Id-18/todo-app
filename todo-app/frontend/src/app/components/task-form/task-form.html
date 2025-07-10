@@ -1,0 +1,71 @@
+<div class="container mt-5">
+  <h2 class="mb-4">Add New Task</h2>
+
+  <form #taskForm="ngForm" (ngSubmit)="addTask()" novalidate>
+    <div class="mb-3">
+      <label class="form-label">Assigned To <span class="text-danger">*</span></label>
+      <input class="form-control" [(ngModel)]="task.assignedTo" name="assignedTo" required #assignedTo="ngModel" />
+      <div class="text-danger small" *ngIf="assignedTo.invalid && assignedTo.touched">
+        Assigned To is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Status <span class="text-danger">*</span></label>
+      <select class="form-select" [(ngModel)]="task.status" name="status" required #status="ngModel">
+        <option value="">Select status</option>
+        <option value="Not Started">Not Started</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+      </select>
+      <div class="text-danger small" *ngIf="status.invalid && status.touched">
+        Status is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Due Date <span class="text-danger">*</span></label>
+      <input type="date" class="form-control" [(ngModel)]="task.dueDate" name="dueDate" required #dueDate="ngModel" />
+      <div class="text-danger small" *ngIf="dueDate.invalid && dueDate.touched">
+        Due Date is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Priority <span class="text-danger">*</span></label>
+      <select class="form-select" [(ngModel)]="task.priority" name="priority" required #priority="ngModel">
+        <option value="">Select priority</option>
+        <option value="Low">Low</option>
+        <option value="Normal">Normal</option>
+        <option value="High">High</option>
+      </select>
+      <div class="text-danger small" *ngIf="priority.invalid && priority.touched">
+        Priority is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Comments</label>
+      <textarea class="form-control" [(ngModel)]="task.comments" name="comments"></textarea>
+    </div>
+
+    <!-- ⚠️ Warning message if form is invalid and submitted -->
+    <div class="text-danger mb-2" *ngIf="formInvalid">
+      ⚠️ Please fill all required fields before submitting.
+    </div>
+
+    <button class="btn btn-success" type="submit" [disabled]="!taskForm.valid">✅ Save Task</button>
+    <a routerLink="/" class="btn btn-secondary ms-2">⬅ Cancel</a>
+  </form>
+</div>
+<!-- ✅ Toast Container -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div class="toast align-items-center text-white bg-success" id="successToast" role="alert" aria-live="assertive"
+    aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMsg">✔️ Success!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
